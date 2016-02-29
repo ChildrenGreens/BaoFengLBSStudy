@@ -1,0 +1,10 @@
+PODS:
+  - AMapNavi (1.5.0)
+
+DEPENDENCIES:
+  - AMapNavi
+
+SPEC CHECKSUMS:
+  AMapNavi: 605e2dc3bad11fb2649ba4df61b82ab0da389d3f
+
+COCOAPODS: 0.39.0
