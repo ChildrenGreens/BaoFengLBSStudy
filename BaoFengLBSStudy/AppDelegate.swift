@@ -15,7 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
+        AMapNaviServices.sharedServices().apiKey = "55e95348c8eebe1a90ce2afcb55067df"
+        MAMapServices.sharedServices().apiKey = "55e95348c8eebe1a90ce2afcb55067df"
         return true
     }
 

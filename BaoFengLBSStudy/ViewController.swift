@@ -8,16 +8,41 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextFieldDelegate, AddressDelegate{
+class ViewController: UIViewController{
     var startPoint:UITextField!
     var endPoint:UITextField!
     
+    var pointDict:NSMutableDictionary?
+    
+    var naviManager:AMapNaviManager?
+    
+    // 导航视图对象
+    var naviViewController:AMapNaviViewController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         buildHeaderContainer()
         
         
+        initNaviManager()
+        
+        initNaviViewController()
+    }
+    
+    // 初始化导航管理对象
+    func initNaviManager(){
+        if (naviManager == nil) {
+            naviManager = AMapNaviManager()
+            naviManager?.delegate = self
+        }
+    }
+    
+    // 初始化导航视图对象
+    func initNaviViewController(){
+        if(naviViewController == nil){
+           naviViewController = AMapNaviViewController.init(delegate: self)
+            
+        }
     }
     
     /**
@@ -72,13 +97,89 @@ class ViewController: UIViewController, UITextFieldDelegate, AddressDelegate{
             button?.tag = index
             button?.setTitle(names[index], forState: UIControlState.Normal)
             button?.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
-            button?.addTarget(self, action: "lbsNavigation", forControlEvents: UIControlEvents.TouchUpInside)
+            button?.addTarget(self, action: "lbsNavigation:", forControlEvents: UIControlEvents.TouchUpInside)
             button?.titleLabel?.font = UIFont.systemFontOfSize(14)
             view.addSubview(button!)
         }
         
+        pointDict = NSMutableDictionary()
+        
     }
     
+    func lbsNavigation(btn: UIButton) {
+        
+        guard let startTip: AMapTip = pointDict?.objectForKey("startPoint") as? AMapTip else {
+            return
+        }
+        
+        guard let endTip: AMapTip = pointDict?.objectForKey("endPoint") as? AMapTip else {
+            return
+        }
+    
+        let startNaviPoint = AMapNaviPoint.locationWithLatitude(startTip.location.latitude, longitude: startTip.location.longitude)
+        
+        let endNaviPoint = AMapNaviPoint.locationWithLatitude(endTip.location.latitude, longitude: endTip.location.longitude)
+        
+        
+        
+        switch(btn.tag) {
+            case 0:
+                break
+            case 1:
+                naviManager!.calculateDriveRouteWithStartPoints([startNaviPoint], endPoints: [endNaviPoint], wayPoints: nil, drivingStrategy:AMapNaviDrivingStrategy.Default)
+            case 2:
+                naviManager!.calculateWalkRouteWithStartPoints([startNaviPoint], endPoints: [endNaviPoint])
+            default:
+                break
+        }
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+
+}
+
+extension ViewController: AddressDelegate {
+    
+    func selectAdress(pointType pointType: PointType, tip: AMapTip) {
+        if pointType == PointType.StartType {
+            startPoint.text = tip.name
+            pointDict?.setObject(tip, forKey: "startPoint")
+            
+        } else {
+            endPoint.text = tip.name
+            pointDict?.setObject(tip, forKey: "endPoint")
+        }
+    }
+}
+
+extension ViewController:AMapNaviManagerDelegate, MAMapViewDelegate, AMapNaviViewControllerDelegate {
+    func naviManagerOnCalculateRouteSuccess(naviManager: AMapNaviManager!) {
+        // 展示导航视图
+        naviManager.presentNaviViewController(naviViewController!, animated: true)
+        
+    }
+    
+    func naviManager(naviManager: AMapNaviManager!, didPresentNaviViewController naviViewController: UIViewController!) {
+        // 开启模拟导航
+        naviManager.startEmulatorNavi()
+    }
+    
+    // 导航界面关闭按钮点击时的回调函数
+    func naviViewControllerCloseButtonClicked(naviViewController: AMapNaviViewController!) {
+        // 停止导航
+        naviManager?.stopNavi()
+        // 取消展示导航视图
+        naviManager?.dismissNaviViewControllerAnimated(true)
+    }
+}
+
+
+extension ViewController: UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
         return true
@@ -92,25 +193,10 @@ class ViewController: UIViewController, UITextFieldDelegate, AddressDelegate{
             vc.pointType = PointType.EndType
         }
         vc.delegate = self
-
+        
         navigationController?.pushViewController(vc, animated: true)
         
         textField.resignFirstResponder()
     }
-    
-    func selectAdress(pointType pointType: PointType, tip: AMapTip) {
-        if pointType == PointType.StartType {
-            startPoint.text = tip.name
-        } else {
-            endPoint.text = tip.name
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
 

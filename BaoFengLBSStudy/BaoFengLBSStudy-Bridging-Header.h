@@ -7,4 +7,5 @@
 //
 
 #import <AMapNaviKit/AMapNaviKit.h>
+#import <AMapNaviKit/MAMapKit.h>
 #import <AMapSearchKit/AMapSearchKit.h>
