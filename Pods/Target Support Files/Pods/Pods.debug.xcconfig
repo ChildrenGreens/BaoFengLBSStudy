@@ -1,7 +1,7 @@
 ARCHS = $(ARCHS_STANDARD)
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/AMapNavi"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/AMapNavi" "${PODS_ROOT}/AMapSearch"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AMapNavi"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AMapNavi"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"c++" -l"stdc++.6.0.9" -l"z" -framework "AMapNaviKit" -framework "CoreLocation" -framework "CoreTelephony" -framework "Security" -framework "SystemConfiguration"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AMapNavi" "${PODS_ROOT}/Headers/Public/AMapSearch"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AMapNavi" -isystem "${PODS_ROOT}/Headers/Public/AMapSearch"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"c++" -l"stdc++.6.0.9" -l"z" -framework "AMapNaviKit" -framework "AMapSearchKit" -framework "CoreLocation" -framework "CoreTelephony" -framework "Security" -framework "SystemConfiguration"
 PODS_ROOT = ${SRCROOT}/Pods
